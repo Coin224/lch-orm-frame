@@ -52,4 +52,14 @@ public class Student implements Serializable {
     public void setSsex(String ssex) {
         this.ssex = ssex;
     }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "sid=" + sid +
+                ", sname='" + sname + '\'' +
+                ", sage=" + sage +
+                ", ssex='" + ssex + '\'' +
+                '}';
+    }
 }

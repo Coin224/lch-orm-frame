@@ -1,4 +1,4 @@
-package com.lch.parseEntity;
+package com.lch.orm;
 
 import java.util.List;
 

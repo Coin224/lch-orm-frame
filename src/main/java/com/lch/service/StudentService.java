@@ -12,19 +12,11 @@ public class StudentService {
     private StudentDao dao = new StudentDao();
 
     public void regist(Student student) {
-        try {
-            dao.insert(student);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dao.insert(student);
     }
 
     public void regist(Map map) {
-        try {
-            dao.insert(map);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        dao.insert(map);
     }
 
 
@@ -35,5 +27,12 @@ public class StudentService {
 
     public void update(Student student) {
         dao.update(student);
+    }
+
+    public Student findOne(int sid) {
+        return dao.findOne(sid);
+    }
+    public Map findOneByMap(int sid) {
+        return dao.findOneByMap(sid);
     }
 }

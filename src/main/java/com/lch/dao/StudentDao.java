@@ -1,9 +1,9 @@
 package com.lch.dao;
 
 import com.lch.domain.Student;
-import com.lch.parse.Handler;
+import com.lch.orm.SqlSession;
 
-import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,22 +15,24 @@ import java.util.Map;
 public class StudentDao {
 
 
-    private Handler handler = new Handler();
+    private SqlSession sqlSession = new SqlSession();
 
 
 
 
 
-    public void insert(Map map) throws SQLException {
+    public void insert(Map map)  {
         String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
-        handler.superUpdate(sql, map);
+        sqlSession.insert(sql, map);
     }
 
 
     // 新增一条学生记录
-    public void insert(Student student) throws SQLException {
+    public void insert(Student student) {
         String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
-        handler.superUpdate(sql,student);
+        sqlSession.insert(sql, student);
+    }
+//    public void insert(Student student)  {
 //        // 0.新增sql
 //        String sql = "insert into student values(?,?,?,?)";
 //        // 1.获取连接池对象、获取连接
@@ -60,12 +62,14 @@ public class StudentDao {
 //                e.printStackTrace();
 //            }
 //        }
-    }
+//    }
 
     // 修改一条学生记录
     public void update(Student student) {
         String sql = "update student set sname = #{sname},sage = #{sage},ssex = #{ssex} where sid = #{sid}";
-        handler.superUpdate(sql,student);
+        sqlSession.update(sql, student);
+    }
+//    public void update(Student student) {
 //        // 0.新增sql
 //        String sql = "update student set sname = ?,sage = ?,ssex = ? where sid = ?";
 //        // 1.获取连接池对象、获取连接
@@ -95,12 +99,14 @@ public class StudentDao {
 //                e.printStackTrace();
 //            }
 //        }
-    }
+//    }
 
     // 删除一条学生记录 根据sid
     public void delete(int sid) {
         String sql = "delete from student where sid = #{sid}";
-        handler.superUpdate(sql,sid);
+        sqlSession.update(sql, sid);
+    }
+//    public void delete(int sid) {
 //        // 0.新增sql
 //        String sql = "delete from student where sid = ?";
 //        // 1.获取连接池对象、获取连接
@@ -127,13 +133,22 @@ public class StudentDao {
 //                e.printStackTrace();
 //            }
 //        }
+//    }
+
+
+    // 查询一条学生记录
+    public Student findOne(int sid) {
+        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
+        return sqlSession.findOne(sql,sid,Student.class);
     }
 
 
     // 查询一条学生记录
-    public Student findOne() {
-        return null;
+    public Map findOneByMap(int sid) {
+        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
+        return sqlSession.findOne(sql,sid, HashMap.class);
     }
+
 
     // 查询多条学生记录
     public List<Student> findList() {
