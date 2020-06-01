@@ -3,7 +3,6 @@ package com.lch.service;
 import com.lch.dao.StudentDao;
 import com.lch.domain.Student;
 
-import java.sql.SQLException;
 import java.util.Map;
 
 public class StudentService {

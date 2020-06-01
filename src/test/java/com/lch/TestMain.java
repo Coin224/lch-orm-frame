@@ -5,7 +5,6 @@ import com.lch.domain.Student;
 import com.lch.service.StudentService;
 import org.junit.Test;
 
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -14,14 +13,14 @@ public class TestMain {
 
     @Test
     public void t1() {
-        for(int i = 3 ; i < 10 ; i++) {
-            Student student = new Student(i, "李春宏"+i, 19, "nan");
+        for(int i = 25 ; i < 40 ; i++) {
+            Student student = new Student(i, "李春宏"+i, 1+i, "nan");
             service.regist(student);
         }
     }
     @Test
     public void t2() {
-        service.delete(1);
+        service.delete(11);
     }
     @Test
     public void t3() {
@@ -31,9 +30,9 @@ public class TestMain {
     @Test
     public void t4() {
         Map student = new HashMap<>();
-        student.put("sid",10);
-        student.put("sname","鑫儿");
-        student.put("sage",19);
+        student.put("sid",11);
+        student.put("sname","鑫儿11");
+        student.put("sage",21);
         student.put("ssex","不男不女");
         service.regist(student);
     }

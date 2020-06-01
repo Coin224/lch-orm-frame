@@ -126,18 +126,19 @@ class Handler {
     // 封装了      1.解析sql
     //             2.获取连接池、获取连接
     //             3.获取状态参数
-    PreparedStatement handlerSqlAndParam(Connection connection ,String sql ,Object obj ,PreparedStatement statement) throws SQLException {
+    StatementAndConnection handlerSqlAndParam(Connection connection ,String sql ,Object obj ,PreparedStatement statement) throws SQLException {
         // 1.解析sql得到sql和key的对象
         SqlAndKey sqlAndKey= this.parseSql(sql);
         // 2.获取连接池、获取连接
         connection = DbPool.getDbPool().getConnection();
         statement = connection.prepareStatement(sqlAndKey.getSql());
+        StatementAndConnection statementAndConnection = new StatementAndConnection(statement,connection);
         // 3.给sql中的? 赋值
         // 处理参数：statement obj
         if(obj != null) {
             this.handlerParam(obj, statement, sqlAndKey.getKeyList());
         }
-        return statement;
+        return statementAndConnection;
     }
 
     // 设计一个处理ResultSet的方法

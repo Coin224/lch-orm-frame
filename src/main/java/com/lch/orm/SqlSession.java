@@ -24,7 +24,9 @@ public class SqlSession {
             // 1.解析sql
             // 2.获取连接池、获取连接
             // 3.获取状态参数
-            statement = handler.handlerSqlAndParam(connection,sql,obj,statement);
+            StatementAndConnection statementAndConnection = handler.handlerSqlAndParam(connection,sql,obj,statement);
+            connection = statementAndConnection.getConnection();
+            statement = statementAndConnection.getStatement();
             // 4.执行操作
             statement.executeUpdate();
         } catch (SQLException e) {
@@ -55,7 +57,9 @@ public class SqlSession {
             // 1.解析sql
             // 2.获取连接池、获取连接
             // 3.获取状态参数
-            statement = handler.handlerSqlAndParam(connection,sql,obj,statement);
+            StatementAndConnection statementAndConnection = handler.handlerSqlAndParam(connection,sql,obj,statement);
+            connection = statementAndConnection.getConnection();
+            statement = statementAndConnection.getStatement();
             // 4.执行操作
             resultSet = statement.executeQuery();
             // 5.先判断有没有结果 如果有处理结果
