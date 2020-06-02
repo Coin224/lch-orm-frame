@@ -158,8 +158,8 @@ class Handler {
                 // resultType 为对象 或者为map集合
                 // 先创键对象 再判断是否为map 否则为domain
                 Object obj = resultType.newInstance();
-                if (obj instanceof HashMap) {
-                    this.getMap(resultSet ,(HashMap) obj);
+                if (obj instanceof Map) {
+                    this.getMap(resultSet , (HashMap) obj);
                 } else {
                     //为对象
                     getDomian(resultSet,obj);

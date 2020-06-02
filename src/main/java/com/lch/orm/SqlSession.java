@@ -1,6 +1,13 @@
 package com.lch.orm;
 
 
+import com.lch.orm.annotation.Delete;
+import com.lch.orm.annotation.Insert;
+import com.lch.orm.annotation.Select;
+import com.lch.orm.annotation.Update;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -70,8 +77,11 @@ public class SqlSession {
 
 
 
+    public <T> List<T> findList(String sql , Class resultType) {
+        return this.findList(sql,null,resultType);
+    }
     // 查询多条记录
-    public <T> List<T> findList(String sql , Object obj , Class resultType) {
+    private <T> List<T> findList(String sql , Object obj , Class resultType) {
         List<T> result = new ArrayList<>();
         Connection connection = null;
         PreparedStatement statement = null;
@@ -111,6 +121,61 @@ public class SqlSession {
     // 删除整张表
     public void delete(String sql) {
         this.update(sql,null);
+    }
+
+    //写一个获得代理的方法
+    public <T>T getMapper(Class clazz) {
+        //三个参数 Classloader clazz数组 invocationHandler
+        ClassLoader classLoader = clazz.getClassLoader();
+        Class[] interfaces = new Class[]{clazz};
+        InvocationHandler invocationHandler = new InvocationHandler() {
+            @Override
+            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+                // 1.获取方法上面的注解
+                Annotation methodAnnotation = method.getAnnotations()[0];
+                // 2.获取注解的的类型
+                Class annotationType = methodAnnotation.annotationType();
+                // 3.获取该注解的value方法
+                Method annotationMethod = annotationType.getDeclaredMethod("value");
+                // 4.执行方法，获取到sql
+                String sql = (String) annotationMethod.invoke(methodAnnotation);
+
+                // 5.分析参数
+                Object param = (args == null) ? null : args[0];
+                if (annotationType == Insert.class) {
+                    SqlSession.this.insert(sql,param);
+                } else if(annotationType == Update.class) {
+                    SqlSession.this.update(sql,param);
+                } else if (annotationType == Delete.class) {
+                    SqlSession.this.delete(sql,param);
+                } else if (annotationType == Select.class) {
+                    //这里是查询的方法
+                    // 获取方法的返回值类型 -- 来代替原来的resultType
+                    // 获取返回值类型 看是查多条还是查一条
+                    Class returnType = method.getReturnType();
+                    if (returnType == List.class) {
+                        // 查多条
+                        // 获取泛型的类型 是一个接口 要把这个类型还原成 真实的泛型
+                        Type innerReturnType = method.getGenericReturnType();
+                        ParameterizedType realReturnType = (ParameterizedType) innerReturnType;
+                        // 继续反射这个类型中所有的泛型
+                        // 获取所有的泛型
+                        Type[] patternTypes = realReturnType.getActualTypeArguments();
+                        // 我们只要第一个
+                        Type patternType = patternTypes[0];
+                        //将这个泛型类还原成Class
+                        Class realPatternType = (Class) patternType;
+                        return SqlSession.this.findList(sql,param,realPatternType);
+                    } else {
+                        // 查单条
+                        return SqlSession.this.findOne(sql,param,returnType);
+                    }
+                    
+                }
+                return null;
+            }
+        };
+        return (T) Proxy.newProxyInstance(classLoader,interfaces,invocationHandler);
     }
 
 }

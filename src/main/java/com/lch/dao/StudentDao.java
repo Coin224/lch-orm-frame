@@ -1,7 +1,10 @@
 package com.lch.dao;
 
 import com.lch.domain.Student;
-import com.lch.orm.SqlSession;
+import com.lch.orm.annotation.Delete;
+import com.lch.orm.annotation.Insert;
+import com.lch.orm.annotation.Select;
+import com.lch.orm.annotation.Update;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,26 +15,58 @@ import java.util.Map;
  * 这几个方法除了sql和参数不一样
  * 其他都差不多、冗余太多
  */
-public class StudentDao {
+public interface StudentDao {
 
 
-    private SqlSession sqlSession = new SqlSession();
+    /**
+     * 这个类变成了接口
+     * jdbc所用的sql也放到了方法上面
+     * 看起来更加简洁
+     * 底层其实是通过反射，创建了一个代理对象
+     * 这个代理对象去真正的调用sqlSession中的增删改查方法
+     * 这种代理叫动态代理
+     */
 
-
-
-
-
-    public void insert(Map map)  {
-        String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
-        sqlSession.insert(sql, map);
-    }
-
+    @Insert("insert into student values(#{sid},#{sname},#{sage},#{ssex})")
+    void insert(Map map);
 
     // 新增一条学生记录
-    public void insert(Student student) {
-        String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
-        sqlSession.insert(sql, student);
-    }
+    @Insert("insert into student values(#{sid},#{sname},#{sage},#{ssex})")
+   void insert(Student student);
+
+    // 修改一条学生记录
+    @Update("update student set sname = #{sname},sage = #{sage},ssex = #{ssex} where sid = #{sid}")
+    void update(Student student);
+
+    // 删除一条学生记录 根据sid
+    @Delete("delete from student where sid = #{sid}")
+    void delete(int sid);
+
+    // 查询一条学生记录
+    @Select("select sid,sname,sage,ssex from student where sid = #{sid}")
+    Student findOne(int sid);
+
+    // 查询一条学生记录
+    @Select("select sid,sname,sage,ssex from student where sid = #{sid}")
+    HashMap findOneByMap(int sid);
+
+    // 查询多条学生记录
+    @Select("select sid,sname,sage,ssex from student")
+    List<Student> findList();
+
+
+
+//    public void insert(Map map)  {
+//        String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
+//        sqlSession.insert(sql, map);
+//    }
+
+
+//    // 新增一条学生记录
+//    public void insert(Student student) {
+//        String sql = "insert into student values(#{sid},#{sname},#{sage},#{ssex})";
+//        sqlSession.insert(sql, student);
+//    }
 //    public void insert(Student student)  {
 //        // 0.新增sql
 //        String sql = "insert into student values(?,?,?,?)";
@@ -64,11 +99,11 @@ public class StudentDao {
 //        }
 //    }
 
-    // 修改一条学生记录
-    public void update(Student student) {
-        String sql = "update student set sname = #{sname},sage = #{sage},ssex = #{ssex} where sid = #{sid}";
-        sqlSession.update(sql, student);
-    }
+//    // 修改一条学生记录
+//    public void update(Student student) {
+//        String sql = "update student set sname = #{sname},sage = #{sage},ssex = #{ssex} where sid = #{sid}";
+//        sqlSession.update(sql, student);
+//    }
 //    public void update(Student student) {
 //        // 0.新增sql
 //        String sql = "update student set sname = ?,sage = ?,ssex = ? where sid = ?";
@@ -101,11 +136,11 @@ public class StudentDao {
 //        }
 //    }
 
-    // 删除一条学生记录 根据sid
-    public void delete(int sid) {
-        String sql = "delete from student where sid = #{sid}";
-        sqlSession.update(sql, sid);
-    }
+//    // 删除一条学生记录 根据sid
+//    public void delete(int sid) {
+//        String sql = "delete from student where sid = #{sid}";
+//        sqlSession.update(sql, sid);
+//    }
 //    public void delete(int sid) {
 //        // 0.新增sql
 //        String sql = "delete from student where sid = ?";
@@ -136,24 +171,24 @@ public class StudentDao {
 //    }
 
 
-    // 查询一条学生记录
-    public Student findOne(int sid) {
-        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
-        return sqlSession.findOne(sql,sid,Student.class);
-    }
+//    // 查询一条学生记录
+//    public Student findOne(int sid) {
+//        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
+//        return sqlSession.findOne(sql,sid,Student.class);
+//    }
 
 
-    // 查询一条学生记录
-    public Map findOneByMap(int sid) {
-        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
-        return sqlSession.findOne(sql,sid, HashMap.class);
-    }
+//    // 查询一条学生记录
+//    public Map findOneByMap(int sid) {
+//        String sql = "select sid,sname,sage,ssex from student where sid = #{sid}";
+//        return sqlSession.findOne(sql,sid, HashMap.class);
+//    }
 
 
-    // 查询多条学生记录
-    public List<Student> findList() {
-        String sql = "select sid,sname,sage,ssex from student";
-        return sqlSession.findList(sql,null,Student.class);
-    }
+//    // 查询多条学生记录
+//    public List<Student> findList() {
+//        String sql = "select sid,sname,sage,ssex from student";
+//        return sqlSession.findList(sql,Student.class);
+//    }
 
 }

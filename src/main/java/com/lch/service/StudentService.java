@@ -2,14 +2,17 @@ package com.lch.service;
 
 import com.lch.dao.StudentDao;
 import com.lch.domain.Student;
+import com.lch.orm.SqlSession;
 
 import java.util.List;
 import java.util.Map;
 
 public class StudentService {
 
-
-    private StudentDao dao = new StudentDao();
+    //原来的真实的dao
+//    private StudentDao dao = new StudentDao();
+    // 得到的代理
+    private StudentDao dao = new SqlSession().getMapper(StudentDao.class);
 
     public void regist(Student student) {
         dao.insert(student);
