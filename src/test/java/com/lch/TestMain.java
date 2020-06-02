@@ -1,11 +1,11 @@
 package com.lch;
 
-import com.lch.dbpool.pool.DbPool;
 import com.lch.domain.Student;
 import com.lch.service.StudentService;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class TestMain {
@@ -48,4 +48,10 @@ public class TestMain {
         System.out.println(student);
     }
 
+
+    @Test
+    public void t7() {
+        List<Student> students = service.findList();
+        System.out.println(students);
+    }
 }

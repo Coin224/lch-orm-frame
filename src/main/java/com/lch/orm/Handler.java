@@ -222,4 +222,21 @@ class Handler {
         }
     }
 
+    // 写一个关闭各种流的方法
+    void closeAll(Connection connection,PreparedStatement statement,ResultSet resultSet) {
+        try {
+            if (resultSet != null) {
+                resultSet.close();
+            }
+            if (statement != null) {
+                statement.close();
+            }
+            if (connection != null) {
+                connection.close();
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 }

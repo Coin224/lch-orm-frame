@@ -152,7 +152,8 @@ public class StudentDao {
 
     // 查询多条学生记录
     public List<Student> findList() {
-        return null;
+        String sql = "select sid,sname,sage,ssex from student";
+        return sqlSession.findList(sql,null,Student.class);
     }
 
 }

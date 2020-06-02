@@ -3,6 +3,7 @@ package com.lch.service;
 import com.lch.dao.StudentDao;
 import com.lch.domain.Student;
 
+import java.util.List;
 import java.util.Map;
 
 public class StudentService {
@@ -33,5 +34,10 @@ public class StudentService {
     }
     public Map findOneByMap(int sid) {
         return dao.findOneByMap(sid);
+    }
+
+
+    public List<Student> findList() {
+        return dao.findList();
     }
 }
